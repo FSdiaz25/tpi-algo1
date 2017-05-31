@@ -27,9 +27,9 @@ void sudoku_print(Tablero t) {
 }
 
 bool sudoku_esCeldaVacia(Tablero t, int f, int c) {
-	// COMPLETAR
-	return false;
+	return t[f][c] == 0;
 }
+
 void sudoku_vaciarTablero(Tablero t) {
 	// COMPLETAR
 }
