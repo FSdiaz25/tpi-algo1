@@ -76,8 +76,7 @@ int sudoku_primerCeldaVaciaColumna(Tablero t) {
 }
 
 int sudoku_valorEnCelda(Tablero t, int f, int c) {
-	// COMPLETAR
-	return -1;
+	return t[f][c];
 }
 
 void sudoku_llenarCelda(Tablero t, int f, int c, int v) {
