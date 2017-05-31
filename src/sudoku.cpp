@@ -49,13 +49,16 @@ int sudoku_nroDeCeldasVacias(Tablero t) {
 	return count;
 }
 
-int sudoku_primerCeldaVaciaFila(Tablero t) {
-	int j, i = 0, result = -1;
-	while (i < 9 && result == -1){
+pair<int,int> primerCeldaVacia(Tablero t) {
+	int j, i = 0;
+	bool pairFound = false;
+	pair<int,int> result = make_pair(-1, -1);
+	while (i < 9 && pairFound == false){
 		j = 0;
-		while (j < 9 && result == -1){
+		while (j < 9 && pairFound == false){
 			if (t[i][j] == 0){
-				result = i;
+				result = make_pair(i, j);
+				pairFound = true;
 			}
 			j++;
 		}
@@ -64,9 +67,12 @@ int sudoku_primerCeldaVaciaFila(Tablero t) {
 	return result;
 }
 
+int sudoku_primerCeldaVaciaFila(Tablero t) {
+	return primerCeldaVacia(t).first;
+}
+
 int sudoku_primerCeldaVaciaColumna(Tablero t) {
-	// COMPLETAR
-	return -1;
+	return primerCeldaVacia(t).second;
 }
 
 int sudoku_valorEnCelda(Tablero t, int f, int c) {
