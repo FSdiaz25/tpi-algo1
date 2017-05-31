@@ -31,7 +31,15 @@ bool sudoku_esCeldaVacia(Tablero t, int f, int c) {
 }
 
 void sudoku_vaciarTablero(Tablero t) {
-	// COMPLETAR
+	int j, i = 0;
+	while (i < 9){
+		j = 0;
+		while (j < 9){
+			t[i][j] = 0;
+			j++;
+		}
+		i++;
+	}
 }
 
 int sudoku_nroDeCeldasVacias(Tablero t) {
@@ -51,14 +59,12 @@ int sudoku_nroDeCeldasVacias(Tablero t) {
 
 pair<int,int> primerCeldaVacia(Tablero t) {
 	int j, i = 0;
-	bool pairFound = false;
 	pair<int,int> result = make_pair(-1, -1);
-	while (i < 9 && pairFound == false){
+	while (i < 9 && result.first == -1){
 		j = 0;
-		while (j < 9 && pairFound == false){
+		while (j < 9 && result.first == -1){
 			if (t[i][j] == 0){
 				result = make_pair(i, j);
-				pairFound = true;
 			}
 			j++;
 		}
@@ -80,16 +86,31 @@ int sudoku_valorEnCelda(Tablero t, int f, int c) {
 }
 
 void sudoku_llenarCelda(Tablero t, int f, int c, int v) {
-	// COMPLETAR
+	t[f][c] = v;
 }
 
 void sudoku_vaciarCelda(Tablero t, int f, int c) {
-	// COMPLETAR
+	t[f][c] = 0;
+}
+
+bool valorEnRango(int v){
+	return v >= 1 && v <= 9;
 }
 
 bool sudoku_esTableroValido(Tablero t) {
-	// COMPLETAR
-	return false;
+	bool esTableroValido = true;
+	int j, i = 0;
+	while (i < 9 && esTableroValido == true){
+		j = 0;
+		while (j < 9 && esTableroValido == true){
+			if (!valorEnRango(t[i][j])){
+				esTableroValido = false;
+			}
+			j++;
+		}
+		i++;
+	}
+	return esTableroValido;
 }
 
 bool sudoku_esTableroParcialmenteResuelto(Tablero t) {
