@@ -94,15 +94,15 @@ void sudoku_vaciarCelda(Tablero t, int f, int c) {
 }
 
 bool valorEnRango(int v){
-	return v >= 1 && v <= 9;
+	return v >= 0 && v <= 9;
 }
 
 bool sudoku_esTableroValido(Tablero t) {
 	bool esTableroValido = true;
 	int j, i = 0;
-	while (i < 9 && esTableroValido == true){
+	while (i < 9 && esTableroValido){
 		j = 0;
-		while (j < 9 && esTableroValido == true){
+		while (j < 9 && esTableroValido){
 			if (!valorEnRango(t[i][j])){
 				esTableroValido = false;
 			}
