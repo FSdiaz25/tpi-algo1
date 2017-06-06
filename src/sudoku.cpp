@@ -235,8 +235,19 @@ bool sudoku_esTableroTotalmenteResuelto(Tablero t) {
 }
 
 bool sudoku_esSubTablero(Tablero t0, Tablero t1) {
-	// COMPLETAR
-	return false;
+	int f = 0;
+	bool result = true;
+
+	while(f < 9 && result){
+		int c = 0;
+		while(c < 9 && result){
+			if(t0[f][c] != t1[f][c] && t0[f][c] != 0)
+				result = false;
+			c++;
+		}
+		f++;
+	}
+	return result;
 }
 
 
