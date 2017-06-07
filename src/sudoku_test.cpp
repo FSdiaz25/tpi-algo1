@@ -74,31 +74,39 @@ TEST(SudokuTests, llenarCeldaNoVacia) {
 	Tablero t;
 	sudoku_vaciarTablero(t);
 	sudoku_llenarCelda(t,4,4,5);
+	sudoku_vaciarCelda(t,4,4);
 	sudoku_llenarCelda(t,4,4,7);
 	int rv = sudoku_valorEnCelda(t,4,4);
 	ASSERT_EQ(7,rv);
 }
-
-TEST(SudokuTests, resolverTableroVacio) {
+TEST(SudokuTests, resolverTableroVacio)
+{
 	Tablero t;
 	sudoku_vaciarTablero(t);
 	bool resolver_rv = sudoku_resolver(t);
-	ASSERT_EQ(true,resolver_rv);
+	ASSERT_EQ(true,resolver_rv)
+		;
 	bool totalmente_resuelto_rv = sudoku_esTableroTotalmenteResuelto(t);
-	ASSERT_EQ(true,totalmente_resuelto_rv);
+	ASSERT_EQ(true,totalmente_resuelto_rv)
+		;
 }
 
-TEST(SudokuTests, tableroSinCeldasVacias) {
+TEST(SudokuTests, tableroSinCeldasVacias)
+{
 	Tablero t;
 	sudoku_vaciarTablero(t);
 	bool resolver_rv = sudoku_resolver(t);
-	ASSERT_EQ(true, resolver_rv);
+	ASSERT_EQ(true, resolver_rv)
+		;
 	int celdas_vacias_rv = sudoku_nroDeCeldasVacias(t);
-	ASSERT_EQ(0, celdas_vacias_rv);
+	ASSERT_EQ(0, celdas_vacias_rv)
+		;
 	int primer_celda_vacia_fila_rv = sudoku_primerCeldaVaciaFila(t);
 	int primer_celda_vacia_columna_rv = sudoku_primerCeldaVaciaColumna(t);
-	ASSERT_EQ(-1, primer_celda_vacia_fila_rv);
-	ASSERT_EQ(-1, primer_celda_vacia_columna_rv);
+	ASSERT_EQ(-1, primer_celda_vacia_fila_rv)
+		;
+	ASSERT_EQ(-1, primer_celda_vacia_columna_rv)
+		;
 }
 
 TEST(SudokuTests, vaciarCelda) {
@@ -165,6 +173,7 @@ TEST(SudokuTests, cantOperaciones){
 	bool resolver0= sudoku_resolver(t, nroOperaciones);
 	ASSERT_EQ(true, resolver0);
 	ASSERT_LT(0, nroOperaciones);
+	nroOperaciones = 0;
 	bool resolver1= sudoku_resolver(t, nroOperaciones);
 	ASSERT_EQ(true, resolver1);
 	ASSERT_EQ(0, nroOperaciones);
