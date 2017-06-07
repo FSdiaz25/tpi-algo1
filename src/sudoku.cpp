@@ -261,28 +261,40 @@ void sudoku_copiarTablero(Tablero src, Tablero target) {
 }
 
 bool sudoku_resolver(Tablero t) {
-	Tablero t0;
-	sudoku_copiarTablero(t, t0);
+	int count = 0;
+	return sudoku_resolver(t, count);
+}
+
+bool sudoku_resolver(Tablero t, int& count) {
+
 	int i = 0, j = 0;
 	bool tieneSolucion = true;
 	vector<pair<int, int> > path;
-	int count = 0;
+	count = 0;
+
+	Tablero t0;
+	sudoku_copiarTablero(t, t0);
+
 	while (i < 9 && tieneSolucion == true) {
 		j = 0;
 		while (j < 9 && tieneSolucion == true) {
 			if (t0[i][j] == 0) {
-				int original = t[i][j];
-				int k = original + 1;
-				while (k <= 9 && t[i][j] == original) {
+
+				// Iteramos hasta encontrar un valor valido para la celda.
+				int initialValue = t[i][j];
+				int k = initialValue + 1;
+				while (k <= 9 && t[i][j] == initialValue) {
 					t[i][j] = k;
 					count++;
 					if (!sudoku_esTableroParcialmenteResuelto(t)) {
-						t[i][j] = original;
+						t[i][j] = initialValue;
 						count++;
 					}
 					k++;
 				}
-				if (t[i][j] == original) {
+
+				if (t[i][j] == initialValue) {
+					// Volvemos un paso atras siempre y cuando sea posible.
 					if (path.size() > 0) {
 						t[i][j] = 0;
 						count++;
@@ -303,12 +315,6 @@ bool sudoku_resolver(Tablero t) {
 		}
 		i++;
 	}
-
 	return tieneSolucion;
-}
-
-bool sudoku_resolver(Tablero t, int& count) {
-	// COMPLETAR
-	return false;
 }
 
