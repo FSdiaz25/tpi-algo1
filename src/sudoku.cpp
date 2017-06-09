@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include "sudoku.h"
+#include "auxiliares.h"
 
 using namespace std;
 
@@ -27,51 +28,47 @@ void sudoku_print(Tablero t) {
 	}
 }
 
+int sudoku_valorEnCelda(Tablero t, int f, int c) {
+	return t[f][c];
+}
+
+void sudoku_llenarCelda(Tablero t, int f, int c, int v) {
+	t[f][c] = v;
+}
+
+void sudoku_vaciarCelda(Tablero t, int f, int c) {
+	sudoku_llenarCelda(t, f, c, 0);
+}
+
 bool sudoku_esCeldaVacia(Tablero t, int f, int c) {
-	return t[f][c] == 0;
+	return sudoku_valorEnCelda(t, f, c) == 0;
 }
 
 void sudoku_vaciarTablero(Tablero t) {
-	int j, i = 0;
-	while (i < 9) {
-		j = 0;
-		while (j < 9) {
-			t[i][j] = 0;
-			j++;
+	int f = 0, c = 0;
+	while (f < 9) {
+		c = 0;
+		while (c < 9) {
+			sudoku_llenarCelda(t, f, c, 0);
+			c++;
 		}
-		i++;
+		f++;
 	}
 }
 
 int sudoku_nroDeCeldasVacias(Tablero t) {
-	int j, i = 0, count = 0;
-	while (i < 9) {
-		j = 0;
-		while (j < 9) {
-			if (t[i][j] == 0) {
+	int f = 0, c = 0, count = 0;
+	while (f < 9) {
+		c = 0;
+		while (c < 9) {
+			if (sudoku_esCeldaVacia(t, f, c)) {
 				count++;
 			}
-			j++;
+			c++;
 		}
-		i++;
+		f++;
 	}
 	return count;
-}
-
-pair<int, int> primerCeldaVacia(Tablero t) {
-	int j, i = 0;
-	pair<int, int> result = make_pair(-1, -1);
-	while (i < 9 && result.first == -1) {
-		j = 0;
-		while (j < 9 && result.first == -1) {
-			if (t[i][j] == 0) {
-				result = make_pair(i, j);
-			}
-			j++;
-		}
-		i++;
-	}
-	return result;
 }
 
 int sudoku_primerCeldaVaciaFila(Tablero t) {
@@ -82,169 +79,40 @@ int sudoku_primerCeldaVaciaColumna(Tablero t) {
 	return primerCeldaVacia(t).second;
 }
 
-int sudoku_valorEnCelda(Tablero t, int f, int c) {
-	return t[f][c];
-}
-
-void sudoku_llenarCelda(Tablero t, int f, int c, int v) {
-	t[f][c] = v;
-}
-
-void sudoku_vaciarCelda(Tablero t, int f, int c) {
-	t[f][c] = 0;
-}
-
-bool valorEnRango(int v) {
-	return v >= 0 && v <= 9;
-}
-
 bool sudoku_esTableroValido(Tablero t) {
 	bool esTableroValido = true;
-	int j, i = 0;
-	while (i < 9 && esTableroValido) {
-		j = 0;
-		while (j < 9 && esTableroValido) {
-			if (!valorEnRango(t[i][j])) {
+	int f = 0, c = 0, valorCelda;
+	while (f < 9 && esTableroValido) {
+		c = 0;
+		while (c < 9 && esTableroValido) {
+			valorCelda = sudoku_valorEnCelda(t, f, c);
+			if (valorCelda < 0 || valorCelda > 9) {
 				esTableroValido = false;
 			}
-			j++;
+			c++;
 		}
-		i++;
+		f++;
 	}
 	return esTableroValido;
 }
 
-int cantEnFila(Tablero t, int f, int value) {
-	int c = 0;
-	int count = 0;
-
-	while (c < 9) {
-		if (t[f][c] == value)
-			count++;
-		c++;
-	}
-
-	return count;
-}
-
-bool filasOk(Tablero t) {
-	int i = 0;
-	bool result = true;
-
-	while (i < 9 && result) {
-		int j = 0;
-		while (j < 9 && result) {
-			if (t[i][j] != 0 && cantEnFila(t, i, t[i][j]) != 1)
-				result = false;
-			j++;
-		}
-		i++;
-	}
-	return result;
-}
-
-int cantEnColumna(Tablero t, int c, int value) {
-	int f = 0;
-	int count = 0;
-
-	while (f < 9) {
-		if (t[f][c] == value)
-			count++;
-		f++;
-	}
-
-	return count;
-}
-
-bool columnasOk(Tablero t) {
-	int j = 0;
-	bool result = true;
-
-	while (j < 9 && result) {
-		int i = 0;
-		while (i < 9 && result) {
-			if (t[i][j] != 0 && cantEnColumna(t, j, t[i][j]) != 1)
-				result = false;
-			i++;
-		}
-		j++;
-	}
-	return result;
-}
-int cantEnRegion(Tablero t, int x, int y, int value) {
-	int f = 0;
-	int count = 0;
-
-	while (f < 3) {
-		int c = 0;
-		while (c < 3) {
-			if (t[3 * x + f][3 * y + c] == value)
-				count++;
-			c++;
-		}
-		f++;
-	}
-
-	return count;
-}
-bool regionValida(Tablero t, int x, int y) {
-	int f = 0;
-	bool result = true;
-
-	while (f < 3 && result) {
-		int c = 0;
-		while (c < 3 && result) {
-			if (t[3 * x + f][3 * y + c] != 0 && cantEnRegion(t, x, y,
-					t[3 * x + f][3 * y + c]) != 1)
-				result = false;
-			c++;
-		}
-		f++;
-	}
-	return result;
-}
-
-bool regionesOk(Tablero t) {
-	int x = 0;
-	bool result = true;
-
-	while (x < 3 && result) {
-		int y = 0;
-		while (y < 3 && result) {
-			if (!regionValida(t, x, y))
-				result = false;
-			y++;
-		}
-		x++;
-	}
-	return result;
-}
-
 bool sudoku_esTableroParcialmenteResuelto(Tablero t) {
-	bool res;
-
-	if (!sudoku_esTableroValido(t))
-		res = false;
-	else
-		res = filasOk(t) && columnasOk(t) && regionesOk(t);
-
-	return res;
+	return sudoku_esTableroValido(t) && filasOk(t) && columnasOk(t)	&& regionesOk(t);
 }
 
 bool sudoku_esTableroTotalmenteResuelto(Tablero t) {
-	return sudoku_esTableroParcialmenteResuelto(t) && sudoku_nroDeCeldasVacias(
-			t) == 0;
+	return sudoku_esTableroParcialmenteResuelto(t) && sudoku_nroDeCeldasVacias(t) == 0;
 }
 
 bool sudoku_esSubTablero(Tablero t0, Tablero t1) {
-	int f = 0;
 	bool result = true;
-
+	int f = 0, c = 0;
 	while (f < 9 && result) {
-		int c = 0;
+		c = 0;
 		while (c < 9 && result) {
-			if (t0[f][c] != t1[f][c] && t0[f][c] != 0)
+			if (sudoku_valorEnCelda(t0, f, c) != 0 && sudoku_valorEnCelda(t0, f, c) != sudoku_valorEnCelda(t1, f, c)) {
 				result = false;
+			}
 			c++;
 		}
 		f++;
@@ -253,10 +121,14 @@ bool sudoku_esSubTablero(Tablero t0, Tablero t1) {
 }
 
 void sudoku_copiarTablero(Tablero src, Tablero target) {
-	for (int i = 0; i < 9; i++) {
-		for (int j = 0; j < 9; j++) {
-			target[i][j] = src[i][j];
+	int f = 0, c = 0;
+	while (f < 9) {
+		c = 0;
+		while (c < 9) {
+			sudoku_llenarCelda(target, f, c, sudoku_valorEnCelda(src, f, c));
+			c++;
 		}
+		f++;
 	}
 }
 
@@ -318,3 +190,122 @@ bool sudoku_resolver(Tablero t, int& count) {
 	return tieneSolucion;
 }
 
+
+// Auxiliares
+
+pair<int, int> primerCeldaVacia(Tablero t) {
+	pair<int, int> result = make_pair(-1, -1);
+	int f = 0, c = 0;
+	while (f < 9 && result.first == -1) {
+		c = 0;
+		while (c < 9 && result.first == -1) {
+			if (sudoku_esCeldaVacia(t, f, c)) {
+				result = make_pair(f, c);
+			}
+			c++;
+		}
+		f++;
+	}
+	return result;
+}
+
+int cantEnFila(Tablero t, int f, int value) {
+	int c = 0, count = 0;
+	while (c < 9) {
+		if (sudoku_valorEnCelda(t, f, c) == value) {
+			count++;
+		}
+		c++;
+	}
+	return count;
+}
+
+int cantEnColumna(Tablero t, int c, int value) {
+	int f = 0, count = 0;
+	while (f < 9) {
+		if (sudoku_valorEnCelda(t, f, c) == value) {
+			count++;
+		}
+		f++;
+	}
+	return count;
+}
+
+int cantEnRegion(Tablero t, int x, int y, int value) {
+	int f = 0, c = 0, count = 0;
+	while (f < 3) {
+		c = 0;
+		while (c < 3) {
+			if (sudoku_valorEnCelda(t, 3 * x + f, 3 * y + c) == value) {
+				count++;
+			}
+			c++;
+		}
+		f++;
+	}
+	return count;
+}
+
+bool filasOk(Tablero t) {
+	bool filasOk = true;
+	int f = 0, c = 0;
+	while (f < 9 && filasOk) {
+		c = 0;
+		while (c < 9 && filasOk) {
+			if (!sudoku_esCeldaVacia(t, f, c) && cantEnFila(t, f, sudoku_valorEnCelda(t, f, c)) != 1) {
+				filasOk = false;
+			}
+			c++;
+		}
+		f++;
+	}
+	return filasOk;
+}
+
+bool columnasOk(Tablero t) {
+	int c = 0;
+	bool columnasOk = true;
+	while (c < 9 && columnasOk) {
+		int f = 0;
+		while (f < 9 && columnasOk) {
+			if (!sudoku_esCeldaVacia(t, f, c) && cantEnColumna(t, c, sudoku_valorEnCelda(t, f, c)) != 1) {
+				columnasOk = false;
+			}
+			f++;
+		}
+		c++;
+	}
+	return columnasOk;
+}
+
+bool regionesOk(Tablero t) {
+	bool result = true;
+	int f = 0;
+	while (f < 3 && result) {
+		int c = 0;
+		while (c < 3 && result) {
+			if (!regionValida(t, f, c)) {
+				result = false;
+			}
+			c++;
+		}
+		f++;
+	}
+	return result;
+}
+
+bool regionValida(Tablero t, int x, int y) {
+	bool regionValida = true;
+	int f = 0, c = 0;
+	while (f < 3 && regionValida) {
+		c = 0;
+		while (c < 3 && regionValida) {
+			if (!sudoku_esCeldaVacia(t, 3 * x + f, 3 * y + c) && cantEnRegion(t, x, y, sudoku_valorEnCelda(t, 3 * x + f, 3 * y + c)) != 1) {
+				regionValida = false;
+			}
+			c++;
+		}
+		f++;
+	}
+	return regionValida;
+}
