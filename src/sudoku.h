@@ -86,6 +86,9 @@ bool sudoku_esSubTablero(Tablero t0, Tablero t1);
  * Si el tablero no puede ser resuelto, retorna false y no modifica
  * el tablero.
  */
+
+void sudoku_copiarTablero(Tablero src, Tablero target);
+
 bool sudoku_resolver(Tablero t);
 
 /**

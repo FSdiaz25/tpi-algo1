@@ -178,3 +178,69 @@ TEST(SudokuTests, cantOperaciones){
 	ASSERT_EQ(true, resolver1);
 	ASSERT_EQ(0, nroOperaciones);
 }
+
+//Nuevos tests
+
+TEST(SudokuTests, copiarTableroVacio){
+	Tablero src, target;
+	sudoku_vaciarTablero(src);
+	sudoku_vaciarTablero(target);
+	int count = 0;
+	sudoku_resolver(target, count);
+	sudoku_copiarTablero(src, target);
+	int nroCeldasVacias = sudoku_nroDeCeldasVacias(target);
+	ASSERT_EQ(81, nroCeldasVacias);
+}
+
+TEST(SudokuTests, copiarTableroNoVacio){
+	Tablero src, target;
+	sudoku_vaciarTablero(src);
+	sudoku_vaciarTablero(target);
+	int count = 0;
+	sudoku_resolver(src, count);
+	sudoku_copiarTablero(src, target);
+	bool mismoTablero = true;
+	for(int i = 0; i < 9 && mismoTablero; i++){
+		for(int j = 0; j < 9 && mismoTablero; j++){
+			if(src[i][j] != target[i][j])
+				mismoTablero = false;
+		}
+	}
+	ASSERT_EQ(true, mismoTablero);
+}
+
+TEST(SudokuTests, resolverTableroSinSolucion){
+	Tablero t;
+	sudoku_vaciarTablero(t);
+	sudoku_llenarCelda(t, 0, 0, 1);
+	sudoku_llenarCelda(t, 0, 6, 1);
+	int count = 0;
+	bool tieneSolucion = sudoku_resolver(t, count);
+	ASSERT_EQ(false, tieneSolucion);
+}
+
+TEST(SudokuTests, noParcialmenteResueltoFila){
+	Tablero t;
+	sudoku_vaciarTablero(t);
+	sudoku_llenarCelda(t, 0, 1, 4);
+	sudoku_llenarCelda(t, 0, 3, 4);
+	ASSERT_EQ(false, sudoku_esTableroParcialmenteResuelto(t));
+}
+
+TEST(SudokuTests, noParcialmenteResueltoColumna){
+	Tablero t;
+	sudoku_vaciarTablero(t);
+	sudoku_llenarCelda(t, 0, 1, 5);
+	sudoku_llenarCelda(t, 4, 1, 5);
+	ASSERT_EQ(false, sudoku_esTableroParcialmenteResuelto(t));
+}
+
+TEST(SudokuTests, noParcialmenteResueltoRegion){
+	Tablero t;
+	sudoku_vaciarTablero(t);
+	sudoku_llenarCelda(t, 0, 1, 4);
+	sudoku_llenarCelda(t, 2, 2, 4);
+	ASSERT_EQ(false, sudoku_esTableroParcialmenteResuelto(t));
+}
+
+

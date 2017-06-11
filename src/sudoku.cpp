@@ -45,7 +45,7 @@ bool sudoku_esCeldaVacia(Tablero t, int f, int c) {
 }
 
 void sudoku_vaciarTablero(Tablero t) {
-	int f = 0, c = 0;
+	int c, f = 0;
 	while (f < 9) {
 		c = 0;
 		while (c < 9) {
@@ -57,7 +57,7 @@ void sudoku_vaciarTablero(Tablero t) {
 }
 
 int sudoku_nroDeCeldasVacias(Tablero t) {
-	int f = 0, c = 0, count = 0;
+	int c, f = 0, count = 0;
 	while (f < 9) {
 		c = 0;
 		while (c < 9) {
@@ -81,7 +81,7 @@ int sudoku_primerCeldaVaciaColumna(Tablero t) {
 
 bool sudoku_esTableroValido(Tablero t) {
 	bool esTableroValido = true;
-	int f = 0, c = 0, valorCelda;
+	int c, f = 0, valorCelda;
 	while (f < 9 && esTableroValido) {
 		c = 0;
 		while (c < 9 && esTableroValido) {
@@ -106,7 +106,7 @@ bool sudoku_esTableroTotalmenteResuelto(Tablero t) {
 
 bool sudoku_esSubTablero(Tablero t0, Tablero t1) {
 	bool result = true;
-	int f = 0, c = 0;
+	int c, f = 0;
 	while (f < 9 && result) {
 		c = 0;
 		while (c < 9 && result) {
@@ -121,7 +121,7 @@ bool sudoku_esSubTablero(Tablero t0, Tablero t1) {
 }
 
 void sudoku_copiarTablero(Tablero src, Tablero target) {
-	int f = 0, c = 0;
+	int c, f = 0;
 	while (f < 9) {
 		c = 0;
 		while (c < 9) {
@@ -138,8 +138,7 @@ bool sudoku_resolver(Tablero t) {
 }
 
 bool sudoku_resolver(Tablero t, int& count) {
-
-	int i = 0, j = 0;
+	int f = 0, c = 0;
 	bool tieneSolucion = true;
 	vector<pair<int, int> > path;
 	count = 0;
@@ -147,45 +146,45 @@ bool sudoku_resolver(Tablero t, int& count) {
 	Tablero t0;
 	sudoku_copiarTablero(t, t0);
 
-	while (i < 9 && tieneSolucion == true) {
-		j = 0;
-		while (j < 9 && tieneSolucion == true) {
-			if (t0[i][j] == 0) {
+	while (f < 9 && tieneSolucion == true) {
+		c = 0;
+		while (c < 9 && tieneSolucion == true) {
+			if (t0[f][c] == 0) {
 
 				// Iteramos hasta encontrar un valor valido para la celda.
-				int initialValue = t[i][j];
+				int initialValue = t[f][c];
 				int k = initialValue + 1;
-				while (k <= 9 && t[i][j] == initialValue) {
-					t[i][j] = k;
+				while (k <= 9 && t[f][c] == initialValue) {
+					t[f][c] = k;
 					count++;
 					if (!sudoku_esTableroParcialmenteResuelto(t)) {
-						t[i][j] = initialValue;
+						t[f][c] = initialValue;
 						count++;
 					}
 					k++;
 				}
 
-				if (t[i][j] == initialValue) {
+				if (t[f][c] == initialValue) {
 					// Volvemos un paso atras siempre y cuando sea posible.
 					if (path.size() > 0) {
-						t[i][j] = 0;
+						t[f][c] = 0;
 						count++;
-						i = path[path.size() - 1].first;
-						j = path[path.size() - 1].second - 1;
-						if (i == 8) {
-							i--;
+						f = path[path.size() - 1].first;
+						c = path[path.size() - 1].second - 1;
+						if (f == 8) {
+							f--;
 						}
 						path.pop_back();
 					} else {
 						tieneSolucion = false;
 					}
 				} else {
-					path.push_back(make_pair(i, j));
+					path.push_back(make_pair(f, c));
 				}
 			}
-			j++;
+			c++;
 		}
-		i++;
+		f++;
 	}
 	return tieneSolucion;
 }
