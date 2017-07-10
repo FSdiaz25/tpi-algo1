@@ -171,9 +171,6 @@ bool sudoku_resolver(Tablero t, int& count) {
 						count++;
 						f = path[path.size() - 1].first;
 						c = path[path.size() - 1].second - 1;
-						if (f == 8) {
-							f--;
-						}
 						path.pop_back();
 					} else {
 						tieneSolucion = false;
